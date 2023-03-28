@@ -13,18 +13,23 @@
     <title>Full stack expense app</title>
 </head>
 <style>
+    body {
+        background-image: url('https://png.pngtree.com/background/20210714/original/pngtree-background-picture-of-boutique-exhibition-board-picture-image_1218774.jpg');
+        background-size: cover;
+    }
+
     .cardcolor {
-        background-color: rgb(238, 250, 250);
+        background-color: rgb(208, 238, 249);
     }
 </style>
 
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-6 offset-3 text-center">
-                <form action="" method="post" class="card p-lg-4 cardcolor mt-5">
+            <div class="col-lg-6 col-md-6 mx-auto offset-3 text-center">
+                <form action="" method="post" class="card p-3 cardcolor mt-5 w-100">
                     <div class="text-center">
-                        <h1 class="">Login</h1>
+                        <h1 class="h1">Sign up</h1>
                         <img src="https://cdn-icons-png.flaticon.com/128/3293/3293466.png" alt="userImage"
                             class="w-25 mb-3">
                     </div>
@@ -40,7 +45,10 @@
                         <input type="password" name="password" id="password" class="form-control mb-3" required
                             placeholder="password">
                     </div>
-                    <button class="btn btn-primary">Login</button>
+                    <button class="btn btn-primary mb-3">Sign up</button>
+                    <div class="text-center text-primary">
+                        <a href="#"><b>Existing user?</b></a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -56,12 +64,12 @@
             email: document.getElementById('email').value,
             password: document.getElementById('password').value
         }
-        try{
-            await axios.post("http://localhost:3000/user/signup",createObject);
+        try {
+            await axios.post("http://localhost:3000/user/signup", createObject);
             form.reset();
             alert('logged in succssfully')
-        }catch(err){
-            console.log(err)
+        } catch (err) {
+            alert(err)
         }
     })
 </script>
