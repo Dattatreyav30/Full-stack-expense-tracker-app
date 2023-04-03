@@ -65,8 +65,12 @@
         }
         try {
             const response = await axios.post('http://localhost:3000/user/login', createObject)
-         alert(`${response.data.result}`);
-         form.reset();
+            if (response.data.result) {
+                location.href = '/views/expenses.html'
+            }
+            else {
+                alert('something went wrong')
+            }
 
         } catch (err) {
             const div = document.getElementById('div')
