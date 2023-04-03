@@ -1,40 +1,56 @@
 const { where } = require('sequelize');
 const User = require('../models/userModel');
 
-exports.postAddUser = (req, res, next) => {
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
-    User.create({
-        username: username,
-        email: email,
-        password: password
-    }).then((result) => {
-        res.status(200).json({ success: 'user signed up successfully' })
-    }).catch((err) => {
+const bcrypt = require('bcrypt');
+
+exports.postAddUser = async (req, res, next) => {
+    try {
+        const username = req.body.username;
+        const email = req.body.email;
+        const password = req.body.password;
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        })
+        if (user) {
+            return res.status(200).json({ success: 'user already exists' });
+        }
+        bcrypt.hash(password, 10, async (err, hash) => {
+            await User.create({
+                username: username,
+                email: email,
+                password: hash,
+            })
+            res.status(200).json({ success: 'user signed up successfully' })
+        })
+    } catch (err) {
         res.status(500).json({ success: 'unable to sign up at the moment' })
-    })
+    }
 }
 
-exports.postLogin = (req, res, next) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    User.findOne({
-        where: {
-            email: email,
-        }
-    }).then((user) => {
+exports.postLogin = async (req, res, next) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const user = await User.findOne({
+            where: {
+                email: email,
+            }
+        })
         if (!user) {
-            res.status(401).json({ result: 'Incorrect email or password' })
+            res.status(404).json({ result: 'user not found' })
         }
-        else if (user.password != password) {
-            res.status(400).json({ result: 'Incorrect password' })
-        }
-        else {
+        const match = await bcrypt.compare(password, user.password);
+
+        if (match) {
             res.status(200).json({ result: 'user logged in successfully' })
         }
-    })
-        .catch((err) => {
-            res.status(400).json({ result: 'not found' })
-        })
+        else {
+            res.status(401).json({ result: 'Incorrect password' })
+        }
+    } catch (err) {
+        res.status(403).json({ result: 'cannot login at the moment' })
+    }
+
 }

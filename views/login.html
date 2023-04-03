@@ -12,11 +12,21 @@
         crossorigin="anonymous"></script>
     <title>Login page</title>
 </head>
+<style>
+    body {
+        background-image: url('https://png.pngtree.com/background/20210715/original/pngtree-flat-business-login-box-login-page-picture-image_1319176.jpg');
+        background-size: cover;
+    }
+
+    .cardcolor {
+        background-color: rgb(240, 240, 255);
+    }
+</style>
 
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 offset-3 mx-auto card  text-center">
+            <div class="col-md-6 offset-3 mx-auto card cardcolor text-center mt-5">
                 <form action="" method="post" class="card-body p-5">
                     <h1 class="text-center mb-3">Login</h1>
                     <div>
@@ -33,7 +43,10 @@
                     </div>
                     <button class="btn btn-primary w-100 mb-3">Login</button>
                     <div class="text-center text-primary">
-                        <a href="signup.html"><b>new user?</b></a>
+                        <a href="signup.html"><b>New user? Create account</b></a>
+                    </div>
+                    <div id="div" class="text-danger text-start">
+
                     </div>
                 </form>
             </div>
@@ -50,12 +63,15 @@
             email: document.getElementById('email').value,
             password: document.getElementById('password').value
         }
-        console.log(createObject);
         try {
             const response = await axios.post('http://localhost:3000/user/login', createObject)
-            alert(`${response.data.result}`);
+         alert(`${response.data.result}`);
+         form.reset();
+
         } catch (err) {
-            alert(`${err.response.data.result}`);
+            const div = document.getElementById('div')
+            div.innerHTML = `<p>${err.response.data.result}</p>`;
+            form.reset();
         }
     })
 </script>
