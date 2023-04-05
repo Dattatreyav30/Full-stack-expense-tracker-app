@@ -12,6 +12,9 @@ const expenseRoute = require('./routes/expensesRoute')
 
 const app = express();
 
+const User = require('./models/userModel');
+const Expense = require('./models/expenseModel');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
@@ -20,8 +23,10 @@ app.use(cors());
 
 
 app.use('/user', userRoute);
+app.use('/expenses',expenseRoute);
 
-app.use('/expenses',expenseRoute)
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 sequelize.sync()
     .then((result) => {

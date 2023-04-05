@@ -11,7 +11,7 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
     <style>
-       
+
     </style>
 
 </head>
@@ -24,20 +24,19 @@
                 <label for="expenseAmount" class="form-label">Expense Amount</label>
                 <div class="input-group">
                     <span class="input-group-text">₹</span>
-                    <input class="form-control" type="number" name="expenseAmount" id="expenseAmount">
+                    <input class="form-control" type="number" name="expenseAmount" id="expenseAmount" required>
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="expenseDescription">Expense Description</label>
-                <input class="form-control " type="text" name="expenseDescription" id="expenseDescription">
+                <input class="form-control " type="text" name="expenseDescription" id="expenseDescription" required>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="expenseName">Expense Category</label>
-                <select name="expenseName" id="expenseName" class="form-select">
+                <select name="expenseName" id="expenseName" class="form-select" required>
                     <option selected>Open this select menu</option>
                     <option value="food">Food</option>
                     <option value="fuel">Fuel</option>
-                    <option value="salary">salary</option>
                     <option value="travel">Travel</option>
                     <option value="other">Others</option>
                 </select>
@@ -45,30 +44,33 @@
             <button class="btn btn-primary mb-4" type="submit">Add Expense</button>
         </form>
         <div>
-            <table class="table table-hover table-group-divider table-light">
-                <thead>
-                    <tr>
-                        <th>Expense Category</th>
-                        <th>Expense Description</th>
-                        <th>Expense Amount</th>
-                        <th>Delete Amount</th>
-                        <th>Edit Expense</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
+            <div>
+                <table class="table table-hover table-group-divider table-light">
+                    <thead>
+                        <tr>
+                            <th>Expense Category</th>
+                            <th>Expense Description</th>
+                            <th>Expense Amount</th>
+                            <th>Delete Expense</th>
 
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <td></td>
-                        <td id="totalAmount">0</td>
-                        <td>
-                        <td></td>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <td></td>
+                            <td id="totalAmount">0</td>
+                            <td>
+                            <td></td>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
         </div>
     </div>
 </body>
@@ -77,8 +79,9 @@
     window.addEventListener('DOMContentLoaded', async e => {
         e.preventDefault();
         try {
-            const response = await axios.get("http://localhost:3000/expenses/get-all-expenses");
-            console.log(response)
+            const token = localStorage.getItem('token')
+            const response = await axios.get("http://localhost:3000/expenses/get-all-expenses", { headers: { 'authorization': token } });
+            console.log(token)
             response.data.forEach(data => {
                 showData(data);
             });
@@ -100,7 +103,8 @@
         console.log(createObject);
         // sending data to mysql
         try {
-            await axios.post("http://localhost:3000/expenses/add-expense", createObject);
+            const token = localStorage.getItem('token')
+            await axios.post("http://localhost:3000/expenses/add-expense", createObject, { headers: { 'authorization': token } });
             location.reload();
 
         } catch (err) {
@@ -114,7 +118,7 @@
         const td = document.createElement('td');
         const td2 = document.createElement('td')
         row.innerHTML = (`<td>${data.expenseCategory}</td> <td>${data.expenseDescription}</td>  <td>${data.expenseAmount}</td>`)
-         td.appendChild(deleteData(tbody, row, data.id))
+        td.appendChild(deleteData(tbody, row, data.id))
         // td2.appendChild(editData(data, tbody, row, data.id))
         row.appendChild(td);
         //row.appendChild(td2);
@@ -136,7 +140,8 @@
         deleteBtn.className = 'btn btn-danger me-5'
         deleteBtn.onclick = async () => {
             try {
-                await axios.delete(`http://localhost:3000/expenses/delete-expense/${id}`);
+               const token =  localStorage.getItem('token')
+                await axios.delete(`http://localhost:3000/expenses/delete-expense/${id}`, { headers: { 'authorization': token } });
                 tbody.removeChild(row);
                 location.reload();
 

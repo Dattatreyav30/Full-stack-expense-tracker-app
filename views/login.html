@@ -66,7 +66,8 @@
         try {
             const response = await axios.post('http://localhost:3000/user/login', createObject)
             if (response.data.result) {
-                location.href = '/views/expenses.html'
+                localStorage.setItem("token", response.data.token)
+                window.location.href = '/views/expenses.html'
             }
             else {
                 alert('something went wrong')
