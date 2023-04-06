@@ -18,7 +18,12 @@
 
 <body class="text-dark">
     <div class="container-fluid">
-        <h1 class="h1">Expense Tracker</h1>
+        <header class="">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h1">Expense Tracker</h1>
+                <button type="submit" class="btn btn-warning" id="rzrpayBtn">Buy premium</button>
+            </div>
+        </header>
         <form action="" method="post">
             <div class="mb-4">
                 <label for="expenseAmount" class="form-label">Expense Amount</label>
@@ -70,12 +75,36 @@
                     </tfoot>
                 </table>
             </div>
-
         </div>
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+    document.getElementById('rzrpayBtn').onclick = async (e) => {
+        e.preventDefault()
+        const token = localStorage.getItem('token')
+        const response = await axios.get('http://localhost:3000/purchase/premiumMembership', { headers: { 'authorization': token } })
+        const orderId = response.data.order.id;
+        const key_id = response.data.key_id;
+        const options = {
+            key: key_id,
+            order_id: orderId,
+            handler: function async(response) {
+                axios.post('http://localhost:3000/purchase/updateTransactionstatus', { order_id: options.order_id, payment_id: response.razorpay_payment_id }, { headers: { 'authorization': token } })
+                 alert('you are a premium user now')
+            },
+        };
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+
+        rzp1.on('payment.failed', (response) => {
+            axios.post('http://localhost:3000/purchase/transactionfailed', { order_id: options.order_id, payment_id: response.razorpay_payment_id }, { headers: { 'authorization': token } })
+            alert('something went wrong')
+        })
+    }
+
+
     window.addEventListener('DOMContentLoaded', async e => {
         e.preventDefault();
         try {
@@ -140,7 +169,7 @@
         deleteBtn.className = 'btn btn-danger me-5'
         deleteBtn.onclick = async () => {
             try {
-               const token =  localStorage.getItem('token')
+                const token = localStorage.getItem('token')
                 await axios.delete(`http://localhost:3000/expenses/delete-expense/${id}`, { headers: { 'authorization': token } });
                 tbody.removeChild(row);
                 location.reload();

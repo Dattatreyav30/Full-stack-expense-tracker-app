@@ -61,6 +61,7 @@ exports.postLogin = async (req, res, next) => {
             res.status(401).json({ result: 'Incorrect password' })
         }
     } catch (err) {
+        console.log(err)
         res.status(500).json({ result: 'cannot login at the moment' })
     }
 
