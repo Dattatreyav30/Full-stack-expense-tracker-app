@@ -42,11 +42,14 @@
                             placeholder="password">
                     </div>
                     <button class="btn btn-primary w-100 mb-3">Login</button>
-                    <div class="text-center text-primary">
-                        <a href="signup.html"><b>New user? Create account</b></a>
+                    <div class="text-start text-primary">
+                        <a href="signup.html" ><b>New user? Create account</b></a>
                     </div>
                     <div id="div" class="text-danger text-start">
 
+                    </div>
+                    <div class="text-end text-primary">
+                        <a href="email.html"><b>Forgot password</b></a>
                     </div>
                 </form>
             </div>
@@ -55,30 +58,5 @@
 
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
-<script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const createObject = {
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value
-        }
-        try {
-            const response = await axios.post('http://localhost:3000/user/login', createObject)
-            if (response.data.result) {
-                localStorage.setItem("token", response.data.token)
-                window.location.href = '/views/expenses.html'
-            }
-            else {
-                alert('something went wrong')
-            }
-
-        } catch (err) {
-            const div = document.getElementById('div')
-            div.innerHTML = `<p>${err.response.data.result}</p>`;
-            form.reset();
-        }
-    })
-</script>
-
+<script src="/public/js/login.js"></script>
 </html>
