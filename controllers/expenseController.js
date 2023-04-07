@@ -5,6 +5,8 @@ const Expense = require('../models/expenseModel');
 const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+
 
 exports.addExpense = async (req, res, next) => {
     try {
@@ -14,7 +16,14 @@ exports.addExpense = async (req, res, next) => {
         const expenseAmount = req.body.expenseAmount;
         const expenseDescription = req.body.expenseDescription;
         const expenseCategory = req.body.expenseCategory;
-        Expense.create({
+
+        const user = await User.findOne({ where: { id: userId.userId } })
+        const Userexpenses = user.totalexpenses || 0;
+        const totalexpenses = parseInt(Userexpenses) + parseInt(expenseAmount);
+
+        await User.update({ totalexpenses: totalexpenses }, { where: { id: userId.userId } })
+
+        await Expense.create({
             expenseAmount: expenseAmount,
             expenseDescription: expenseDescription,
             expenseCategory: expenseCategory,
@@ -22,6 +31,7 @@ exports.addExpense = async (req, res, next) => {
         })
         res.status(200).json({ message: 'table created succesfully' })
     } catch (err) {
+        console.log(err)
         res.status(400).json({ message: 'something went wrong' })
     }
 }
@@ -42,12 +52,18 @@ exports.deleteExpense = async (req, res, next) => {
         console.log(token);
         const userId = jwt.verify(token, '9efc07b82d60a3c38b724cb509e20f100ae3defd34431b2ccc42f28301e5504f')
         const id = req.params.id;
+
+        const user = await User.findOne({ where: { id: userId.userId } });
+        const userExpenses = user.totalexpenses
         const expense = await Expense.findOne({
             where: {
                 id: id,
                 userId: userId.userId
             }
         })
+        const expenseAmount = expense.expenseAmount;
+        const totalexpenses = parseInt(userExpenses - expenseAmount)
+        User.update({ totalexpenses: totalexpenses }, { where: { id: userId.userId } })
         await expense.destroy();
         res.status(200).json({ message: 'Expense deleted successfully' });
     } catch (err) {

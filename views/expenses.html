@@ -150,6 +150,7 @@
             document.getElementById('leaderboard').onclick = async (e) => {
                 document.getElementById('table2').style.display = 'table'
                 const response = await axios.get("http://localhost:3000/purchase/leaderboard", { headers: { 'authorization': token } });
+                console.log(response)
                 response.data.forEach((data) => {
                     showLeaderBoard(data)
                 })
@@ -209,7 +210,7 @@
         const td = document.createElement('td');
         const td2 = document.createElement('td');
         row.innerHTML = '<h3>Laderboard</h3>'
-        row.innerHTML = (`<td>${data.username}</td> <td>${data.totalamount}</td>`)
+        row.innerHTML = (`<td>${data.username}</td> <td>${data.totalexpenses}</td>`)
         document.getElementById('h4').textContent = 'Leaderboard'
         //td.appendChild(deleteData(tbody, row, data.id))
         // td2.appendChild(editData(data, tbody, row, data.id))

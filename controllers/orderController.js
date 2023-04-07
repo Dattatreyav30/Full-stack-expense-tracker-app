@@ -70,21 +70,13 @@ exports.check_premium = async (req, res, next) => {
 }
 
 exports.leaderBord = async (req, res, next) => {
-    try{
-        const expenses = await Expense.findAll({
-            attributes: ['userId', [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'expenseAmount']],
-            group: ['userId'],
-            include: [{ model: User, attributes: ['username'] }],
-            order:[[sequelize.literal('expenseAmount DESC')]]
+    try {
+        const allUserExpenses = await User.findAll({
+            order: [['totalexpenses', 'DESC']]
         })
-        const result = await expenses.map(expense => ({
-            username: expense.user.username,
-            totalamount: expense.get('expenseAmount')
-        }))
-        // .sort((a,b)=>b.totalamount-a.totalamount);
-         res.status(200).json(result)
-    }catch(err){
-
-        res.status(500).json({message:'server errro'})
+        res.status(200).json(allUserExpenses)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'server errror' })
     }
 }
