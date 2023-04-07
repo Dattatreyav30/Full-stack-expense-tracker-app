@@ -27,27 +27,33 @@ exports.premiumMembership = async (req, res, next) => {
 
 
 exports.updateTrnsactionstatus = async (req, res, next) => {
+    const t = await sequelize.transaction()
     try {
         const payementId = req.body.payment_id;
         const orderId = req.body.order_id;
-        const order = await Order.findOne({ where: { orderId: orderId } });
+        const order = await Order.findOne({ where: { orderId: orderId }, transaction: t });
         await order.update({ paymentId: payementId, status: 'SUCCESSFULL' })
         await req.user.update({ isPremiumUser: true });
+        await t.commit()
         res.status(200).json({ success: true, message: 'transaction successfull' })
     } catch (err) {
+        await t.rollback()
         res.status(401).json({ message: 'something went wrong' })
     }
 }
 
 exports.transactionfailed = async (req, res, next) => {
+    const t = await sequelize.transaction();
     try {
         const payementId = req.body.payment_id;
         const orderId = req.body.order_id;
-        const order = await Order.findOne({ where: { orderId: orderId } });
+        const order = await Order.findOne({ where: { orderId: orderId }, transaction: t });
         await order.update({ paymentId: payementId, status: 'FAILED' })
         await req.user.update({ isPremiumUser: false });
+        await t.commit()
         res.status(200).json({ success: true, message: 'transaction failed' })
     } catch (err) {
+        await t.rollback();
         res.status(401).json({ message: 'something went wrong' })
     }
 }
