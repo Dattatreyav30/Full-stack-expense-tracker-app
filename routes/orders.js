@@ -12,6 +12,10 @@ router.get('/premiumMembership', userAuthentication.authentication, orderControl
 
 router.post('/updateTransactionstatus', userAuthentication.authentication, orderController.updateTrnsactionstatus);
 
-router.post('/transactionfailed',userAuthentication.authentication,orderController.transactionfailed)
+router.post('/transactionfailed', userAuthentication.authentication, orderController.transactionfailed)
+
+router.get('/check-premium', userAuthentication.authentication, orderController.check_premium)
+
+router.get('/leaderboard', userAuthentication.authentication, orderController.leaderBord)
 
 module.exports = router;

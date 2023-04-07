@@ -11,7 +11,6 @@ exports.addExpense = async (req, res, next) => {
         const token = req.header('authorization');
         console.log(token);
         const userId = jwt.verify(token, '9efc07b82d60a3c38b724cb509e20f100ae3defd34431b2ccc42f28301e5504f')
-
         const expenseAmount = req.body.expenseAmount;
         const expenseDescription = req.body.expenseDescription;
         const expenseCategory = req.body.expenseCategory;
@@ -46,7 +45,7 @@ exports.deleteExpense = async (req, res, next) => {
         const expense = await Expense.findOne({
             where: {
                 id: id,
-                userId : userId.userId
+                userId: userId.userId
             }
         })
         await expense.destroy();
