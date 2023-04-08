@@ -11,47 +11,52 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
     <style>
-
+        header{
+            background-color: rgb(97, 244, 239);
+        }
     </style>
 
 </head>
 
 <body class="text-dark">
     <div class="container-fluid">
-        <header class="">
+        <header class="py-4 bg p-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="h1">Expense Tracker</h1>
                 <button type="submit" class="btn btn-warning" id="rzrpayBtn" style="display:none" ;>Buy premium</button>
                 <b>
-                    <p id="h3"></p>
+                    <h5 id="h3" class="h5 float-end"></h5>
                 </b>
                 <button id="leaderboard" class="btn btn-primary" style="display:none">show leaderboard</button>
+                <button id="downloadExpenses" class="btn btn-primary" style="display:none">Download expenses</button>
             </div>
         </header>
-        <form action="" method="post">
-            <div class="mb-4">
-                <label for="expenseAmount" class="form-label">Expense Amount</label>
-                <div class="input-group">
-                    <span class="input-group-text">₹</span>
-                    <input class="form-control" type="number" name="expenseAmount" id="expenseAmount" required>
+        <div class="card">
+            <form action="" method="post" class="card-body p-3 mt-2">
+                <div class="mb-4">
+                    <label for="expenseAmount" class="form-label">Expense Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">₹</span>
+                        <input class="form-control" type="number" name="expenseAmount" id="expenseAmount" required>
+                    </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="expenseDescription">Expense Description</label>
-                <input class="form-control " type="text" name="expenseDescription" id="expenseDescription" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="expenseName">Expense Category</label>
-                <select name="expenseName" id="expenseName" class="form-select" required>
-                    <option selected>Open this select menu</option>
-                    <option value="food">Food</option>
-                    <option value="fuel">Fuel</option>
-                    <option value="travel">Travel</option>
-                    <option value="other">Others</option>
-                </select>
-            </div>
-            <button class="btn btn-primary mb-4" type="submit">Add Expense</button>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label" for="expenseDescription">Expense Description</label>
+                    <input class="form-control " type="text" name="expenseDescription" id="expenseDescription" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="expenseName">Expense Category</label>
+                    <select name="expenseName" id="expenseName" class="form-select" required>
+                        <option selected>Open this select menu</option>
+                        <option value="food">Food</option>
+                        <option value="fuel">Fuel</option>
+                        <option value="travel">Travel</option>
+                        <option value="other">Others</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary mb-4" type="submit">Add Expense</button>
+            </form>
+        </div>
         <div>
             <div>
                 <table class="table table-hover table-group-divider table-light">

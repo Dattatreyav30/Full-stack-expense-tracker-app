@@ -10,7 +10,6 @@ document.getElementById('rzrpayBtn').onclick = async (e) => {
         handler: function async(response) {
             axios.post('http://localhost:3000/purchase/updateTransactionstatus', { order_id: options.order_id, payment_id: response.razorpay_payment_id }, { headers: { 'authorization': token } })
             alert('you are a premium user now');
-            window
         },
     };
     const rzp1 = new Razorpay(options);
@@ -32,8 +31,9 @@ window.addEventListener('DOMContentLoaded', async e => {
         console.log(premiumResponse);
         if (premiumResponse.data.isPremiumUser) {
             document.getElementById('rzrpayBtn').style.display = 'none';
-            document.getElementById('leaderboard').style.display = 'block'
-            document.getElementById('h3').innerHTML = 'you are a premium user';
+            document.getElementById('leaderboard').style.display = 'block';
+            document.getElementById('downloadExpenses').style.display = 'block';
+            document.getElementById('h3').innerHTML = 'premium user';
         }
         else {
             document.getElementById('rzrpayBtn').style.display = 'block';
