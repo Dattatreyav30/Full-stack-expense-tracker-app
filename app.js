@@ -16,6 +16,7 @@ const app = express();
 const User = require('./models/userModel');
 const Expense = require('./models/expenseModel');
 const Orders = require('./models/orderModel');
+const forgotPassword  = require('./models/forgotPassowordModel')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -36,6 +37,8 @@ Expense.belongsTo(User);
 User.hasMany(Orders);
 Orders.belongsTo(User)
 
+User.hasMany(forgotPassword)
+forgotPassword.belongsTo(User)
 
 sequelize.sync()
     .then((result) => {
