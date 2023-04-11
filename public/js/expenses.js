@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', async e => {
     e.preventDefault();
     try {
         const token = localStorage.getItem('token')
-
+        const page = 1;
         const premiumResponse = await axios.get('http://localhost:3000/purchase/check-premium', { headers: { 'authorization': token } })
         console.log(premiumResponse);
         if (premiumResponse.data.isPremiumUser) {
@@ -38,27 +38,50 @@ window.addEventListener('DOMContentLoaded', async e => {
         else {
             document.getElementById('rzrpayBtn').style.display = 'block';
         }
-
-        const response = await axios.get("http://localhost:3000/expenses/get-all-expenses", { headers: { 'authorization': token } });
-        response.data.forEach(data => {
-            showData(data);
-        });
-        document.getElementById('leaderboard').onclick = async (e) => {
-            document.getElementById('table2').style.display = 'table'
-            const response = await axios.get("http://localhost:3000/purchase/leaderboard", { headers: { 'authorization': token } });
-            console.log(response)
-            response.data.forEach((data) => {
-                showLeaderBoard(data)
-            })
-
-        }
+        await getExpenses();
     } catch (err) {
         console.log(err);
     }
 })
 
+function showPagination({
+    currentPage,
+    hasNextPage,
+    hasPreviousPage,
+    nextPage,
+    previousPage
+}) {
+    const pagination = document.getElementById('paginationBtns')
+    pagination.innerHTML = "";
+    const btn1 = document.createElement('button');
+    const btn2 = document.createElement('button');
+    btn1.className = 'me-3';
+    btn2.className = 'me-3';
+    if (hasPreviousPage) {
+        btn2.innerHTML = previousPage
+        btn2.addEventListener('click', () => getExpenses(previousPage))
+        pagination.appendChild(btn2)
+    }
+    btn1.innerHTML = `<h3>${currentPage}</h3>`
+    btn1.addEventListener('click', () => getExpenses(currentPage))
+    pagination.appendChild(btn1)
+    if (hasNextPage) {
+        const btn3 = document.createElement('button')
+        btn3.innerHTML = nextPage
+        btn3.addEventListener('click', () => getExpenses(nextPage))
+        pagination.appendChild(btn3)
+    }
+}
 
 
+const getExpenses = async (page) => {
+    const token = localStorage.getItem('token')
+    const response = await axios.get(`http://localhost:3000/expenses/get-all-expenses?page=${page}`, { headers: { 'authorization': token } })
+    response.data.allExpenses.forEach(expense => {
+        showData(expense)
+        showPagination(response.data.pagination)
+    })
+}
 const form = document.querySelector('form');
 form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -140,6 +163,17 @@ deleteData = (tbody, row, id) => {
         }
     }
     return deleteBtn;
+}
+
+document.getElementById('leaderboard').onclick = async (e) => {
+    const token = localStorage.getItem('token')
+    document.getElementById('table2').style.display = 'table'
+    const response = await axios.get("http://localhost:3000/purchase/leaderboard", { headers: { 'authorization': token } });
+    console.log(response)
+    response.data.forEach((data) => {
+        showLeaderBoard(data)
+    })
+
 }
 
 
