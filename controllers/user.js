@@ -7,14 +7,16 @@ const jwt = require('jsonwebtoken');
 
 const sequelize = require('../util/database');
 
+require('dotenv').config();
+
 
 const crypto = require('crypto');
 const secretKey = crypto.randomBytes(32).toString('hex');
 //console.log(secretKey);
-
+const jwtSecretkey = process.env.JWT_SECRET_KEY;
 
 function generateAccessToken(id) {
-    return jwt.sign({ userId: id }, "9efc07b82d60a3c38b724cb509e20f100ae3defd34431b2ccc42f28301e5504f")
+    return jwt.sign({ userId: id }, jwtSecretkey)
 }
 
 exports.postAddUser = async (req, res, next) => {
