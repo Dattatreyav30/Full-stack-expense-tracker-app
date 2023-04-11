@@ -142,6 +142,22 @@ deleteData = (tbody, row, id) => {
     return deleteBtn;
 }
 
+
+const downloadExpenses = document.getElementById('downloadExpenses');
+downloadExpenses.onclick = async () => {
+    try {
+        const token = localStorage.getItem('token')
+        const response = await axios.get('http://localhost:3000/purchase/download', { headers: { 'authorization': token } })
+        const url = response.data
+        console.log(response)
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = 'myexpenses.csv'
+        downloadLink.click();
+    } catch (err) {
+        console.log(err)
+    }
+}
 // editData = (data, tbody, row, id) => {
 //     let editBtn = document.createElement('input');
 //     editBtn.type = 'button';

@@ -18,6 +18,6 @@ router.get('/check-premium', userAuthentication.authentication, orderController.
 
 router.get('/leaderboard', userAuthentication.authentication, orderController.leaderBord)
 
-router.get('download',)
+router.get('/download',userAuthentication.authentication,orderController.download)
 
 module.exports = router;
