@@ -28,7 +28,6 @@ window.addEventListener('DOMContentLoaded', async e => {
         const token = localStorage.getItem('token')
         const page = 1;
         const premiumResponse = await axios.get('http://localhost:3000/purchase/check-premium', { headers: { 'authorization': token } })
-        console.log(premiumResponse);
         if (premiumResponse.data.isPremiumUser) {
             document.getElementById('rzrpayBtn').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'block';
@@ -49,7 +48,8 @@ function showPagination({
     hasNextPage,
     hasPreviousPage,
     nextPage,
-    previousPage
+    previousPage,
+    lastPage
 }) {
     const pagination = document.getElementById('paginationBtns')
     pagination.innerHTML = "";
@@ -74,9 +74,12 @@ function showPagination({
 }
 
 
-const getExpenses = async (page) => {
-    const token = localStorage.getItem('token')
-    const response = await axios.get(`http://localhost:3000/expenses/get-all-expenses?page=${page}`, { headers: { 'authorization': token } })
+const getExpenses = async (page, limit) => {
+    const token = localStorage.getItem('token');
+    const dyn_pages = document.getElementById('dyn_pages');
+    const limit1 = dyn_pages.value;
+    const response = await axios.get(`http://localhost:3000/expenses/get-all-expenses?page=${page}&limit=${limit1}`, { headers: { 'authorization': token } })
+    console.log(limit1)
     response.data.allExpenses.forEach(expense => {
         showData(expense)
         showPagination(response.data.pagination)
