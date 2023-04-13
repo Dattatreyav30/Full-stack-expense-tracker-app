@@ -1,5 +1,6 @@
 document.getElementById('rzrpayBtn').onclick = async (e) => {
     e.preventDefault()
+    console
     const token = localStorage.getItem('token')
     const response = await axios.get('http://localhost:3000/purchase/premiumMembership', { headers: { 'authorization': token } })
     const orderId = response.data.order.id;
@@ -26,7 +27,6 @@ window.addEventListener('DOMContentLoaded', async e => {
     e.preventDefault();
     try {
         const token = localStorage.getItem('token')
-        const page = 1;
         const premiumResponse = await axios.get('http://localhost:3000/purchase/check-premium', { headers: { 'authorization': token } })
         if (premiumResponse.data.isPremiumUser) {
             document.getElementById('rzrpayBtn').style.display = 'none';
@@ -53,16 +53,16 @@ function showPagination({
 }) {
     const pagination = document.getElementById('paginationBtns')
     pagination.innerHTML = "";
-    const btn1 = document.createElement('button');
-    const btn2 = document.createElement('button');
-    btn1.className = 'me-3';
-    btn2.className = 'me-3';
     if (hasPreviousPage) {
+        const btn2 = document.createElement('button');
+        btn2.className = 'me-3';
         btn2.innerHTML = previousPage
         btn2.addEventListener('click', () => getExpenses(previousPage))
         pagination.appendChild(btn2)
     }
+    const btn1 = document.createElement('button');
     btn1.innerHTML = `<h3>${currentPage}</h3>`
+    btn1.className = 'me-3';
     btn1.addEventListener('click', () => getExpenses(currentPage))
     pagination.appendChild(btn1)
     if (hasNextPage) {
@@ -71,19 +71,30 @@ function showPagination({
         btn3.addEventListener('click', () => getExpenses(nextPage))
         pagination.appendChild(btn3)
     }
+    if (lastPage > 1) {
+        const btn4 = document.createElement('button');
+        btn4.className = 'ms-3';
+        btn4.innerHTML = 'Final';
+        btn4.addEventListener('click', () => getExpenses(lastPage));
+        pagination.appendChild(btn4);
+    }
 }
 
 
-const getExpenses = async (page, limit) => {
+const getExpenses = async (page) => {
     const token = localStorage.getItem('token');
-    const dyn_pages = document.getElementById('dyn_pages');
-    const limit1 = dyn_pages.value;
+    const dynPagesSelect = document.getElementById('dyn_pages');
+    dynPagesSelect.addEventListener('change', async () => {
+        localStorage.setItem('limit1', dynPagesSelect.value);
+        location.reload();
+    })
+    const limit1 = localStorage.getItem('limit1')
     const response = await axios.get(`http://localhost:3000/expenses/get-all-expenses?page=${page}&limit=${limit1}`, { headers: { 'authorization': token } })
-    console.log(limit1)
     response.data.allExpenses.forEach(expense => {
         showData(expense)
         showPagination(response.data.pagination)
-    })
+    });
+
 }
 const form = document.querySelector('form');
 form.addEventListener('submit', async e => {
@@ -93,7 +104,6 @@ form.addEventListener('submit', async e => {
         expenseDescription: document.getElementById('expenseDescription').value,
         expenseAmount: document.getElementById('expenseAmount').value,
     }
-    console.log(createObject);
     // sending data to mysql
     try {
         const token = localStorage.getItem('token')
@@ -117,7 +127,6 @@ const showData = async (data) => {
     //row.appendChild(td2);
     tbody.appendChild(row);
     form.reset();
-    console.log(data);
 
     //updating the total amount
     const totalAmount = document.getElementById('totalAmount');

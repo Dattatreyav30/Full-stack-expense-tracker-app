@@ -26,7 +26,6 @@ exports.passWord = async (req, res, next) => {
         const user = await User.findOne({ where: { email: email } })
         const userEmail = user.email;
         const userId = user.id;
-        console.log(userEmail, userId)
         const id = uuidv4()
         await forgotModel.create({
             id: id,

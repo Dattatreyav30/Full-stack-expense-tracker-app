@@ -43,21 +43,20 @@ exports.getAllExpenses = async (req, res, next) => {
     try {
         const page = +req.query.page || 1
         const limit = +req.query.limit;
-        console.log(limit)
         let total_items;
         const total = await Expense.count({ where: { userId: req.user.id } })
         total_items = total
         const allExpenses = await Expense.findAll({
-            where: { userId: req.user.id }, offset: (page - 1) *limit,
-            limit:limit
+            where: { userId: req.user.id }, offset: (page - 1) * limit,
+            limit: limit
         })
         const pagination = {
             currentPage: page,
-            hasNextPage:limit * page < total_items,
+            hasNextPage: limit * page < total_items,
             nextPage: page + 1,
             hasPreviousPage: page > 1,
             previousPage: page - 1,
-            lastPage: Math.ceil(total_items /limit),
+            lastPage: Math.ceil(total_items / limit),
         }
         res.status(200).json({ allExpenses, pagination, success: true })
     } catch (err) {
@@ -83,7 +82,7 @@ exports.deleteExpense = async (req, res, next) => {
         }, { transaction: t })
         const expenseAmount = expense.expenseAmount;
         const totalexpenses = parseInt(userExpenses - expenseAmount)
-        User.update({ totalexpenses: totalexpenses }, { where: { id: userId.userId } })
+        await User.update({ totalexpenses: totalexpenses }, { where: { id: userId.userId } })
         await expense.destroy();
         await t.commit()
         res.status(200).json({ message: 'Expense deleted successfully' });
