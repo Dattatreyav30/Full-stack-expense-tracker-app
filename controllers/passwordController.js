@@ -21,8 +21,6 @@ exports.passWord = async (req, res, next) => {
         const apiKey = client.authentications['api-key'];
         apiKey.apiKey = process.env.API_KEY;
 
-        //adding values to table 
-
         const user = await User.findOne({ where: { email: email } })
         const userEmail = user.email;
         const userId = user.id;

@@ -122,9 +122,7 @@ const showData = async (data) => {
     const td2 = document.createElement('td')
     row.innerHTML = (`<td>${data.expenseCategory}</td> <td>${data.expenseDescription}</td>  <td>${data.expenseAmount}</td>`)
     td.appendChild(deleteData(tbody, row, data.id))
-    // td2.appendChild(editData(data, tbody, row, data.id))
     row.appendChild(td);
-    //row.appendChild(td2);
     tbody.appendChild(row);
     form.reset();
 
@@ -143,10 +141,7 @@ const showLeaderBoard = async (data) => {
     row.innerHTML = '<h3>Laderboard</h3>'
     row.innerHTML = (`<td>${data.username}</td> <td>${data.totalexpenses}</td>`)
     document.getElementById('h4').textContent = 'Leaderboard'
-    //td.appendChild(deleteData(tbody, row, data.id))
-    // td2.appendChild(editData(data, tbody, row, data.id))
     row.appendChild(td);
-    //row.appendChild(td2);
     tbody.appendChild(row);
     form.reset();
 
@@ -204,26 +199,7 @@ downloadExpenses.onclick = async () => {
         console.log(err)
     }
 }
-// editData = (data, tbody, row, id) => {
-//     let editBtn = document.createElement('input');
-//     editBtn.type = 'button';
-//     editBtn.id = 'edit'
-//     editBtn.value = 'Edit Expense';
-//     editBtn.className = 'btn btn-warning'
-//     editBtn.onclick = async () => {
-//         try {
-//             await axios.delete(`http://localhost:3000/delete-user/${id}`);
-//             let createObject = {
-//                 expenseName: document.getElementById('expenseName').value = data.expenseName,
-//                 expenseDesc: document.getElementById('expenseDescription').value = data.expenseDesc,
-//                 expenseAmount: document.getElementById('expenseAmount').value = data.expenseAmount
-//             }
-//             tbody.removeChild(row);
 
-
-//         } catch (err) {
-//             console.error(err);
-//         }
-//     }
-//     return editBtn;
-// }
+document.getElementById('logoutBtn').onclick = () => {
+    window.location.href = '/views/login.html'
+}

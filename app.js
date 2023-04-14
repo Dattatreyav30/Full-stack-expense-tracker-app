@@ -52,8 +52,8 @@ Expense.belongsTo(User);
 User.hasMany(Orders);
 Orders.belongsTo(User)
 
-User.hasMany(forgotPassword)
-forgotPassword.belongsTo(User)
+User.hasMany(forgotPassword);
+forgotPassword.belongsTo(User);
 
 sequelize.sync()
     .then((result) => {
